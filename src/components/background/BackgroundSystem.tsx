@@ -1,13 +1,14 @@
 /**
  * BackgroundSystem.tsx
- * Composes InteractiveNeuralMesh (Layer 1), AmbientOrbs (Layer 2), and MicroGrid (Layer 3)
- * into a single fixed backdrop, reacting to aiState, highContrast, and focalRect.
+ * Composes InteractiveNeuralMesh (Layer 1), AmbientOrbs (Layer 2), MicroGrid (Layer 3),
+ * and MouseAnimation (Layer 4) into a single backdrop.
  */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { InteractiveNeuralMesh } from './InteractiveNeuralMesh';
 import { AmbientOrbs } from './AmbientOrbs';
 import { MicroGrid } from './MicroGrid';
+import { MouseAnimation } from './MouseAnimation';
 import { useBackgroundState } from '@/context/BackgroundStateContext';
 import { AIActivityState } from '@/types/background';
 
@@ -57,6 +58,7 @@ export const BackgroundSystem: React.FC<BackgroundSystemProps> = (props) => {
         <MicroGrid opacity={decorativeOpacity} />
         <AmbientOrbs aiState={aiState} opacity={decorativeOpacity} focalPoint={focalPoint} />
         <InteractiveNeuralMesh aiState={aiState} opacity={decorativeOpacity} />
+        <MouseAnimation />
       </div>
     </>
   );
