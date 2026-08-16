@@ -274,10 +274,15 @@ export const LandingPage: React.FC = () => {
 
       </div>
 
-      {/* Footer Quote Banner */}
-      <p className="text-[11px] text-center text-slate-400/90 font-medium tracking-wide pt-8">
-        {t('bridgingQuote')}
-      </p>
+      {/* Prominent Visible Quote Banner */}
+      <div className="mt-12 text-center">
+        <div className="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-slate-900/90 border border-slate-700/80 shadow-xl shadow-cyan-500/10 max-w-2xl mx-auto backdrop-blur-md">
+          <Sparkles className="w-5 h-5 text-cyan-400 shrink-0" />
+          <p className="text-sm sm:text-base font-bold text-slate-100 tracking-wide">
+            {t('bridgingQuote')}
+          </p>
+        </div>
+      </div>
 
     </div>
   );

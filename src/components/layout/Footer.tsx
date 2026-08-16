@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
             <div>
               <p className="font-semibold text-slate-200">{t('footerTitle')}</p>
               <p className="text-[11px] text-slate-400">{t('footerTagline')}</p>
-              <p className="text-[10px] text-cyan-400/90 font-medium tracking-wide mt-1">
+              <p className="text-xs sm:text-sm font-extrabold bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-400 bg-clip-text text-transparent mt-1.5">
                 {t('bridgingQuote')}
               </p>
             </div>
