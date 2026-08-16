@@ -2,8 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, CheckCircle2, Clock, Sparkles, TrendingUp, ShieldCheck, FileCheck, Users } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from 'recharts';
+import { useAccessibility } from '@/context/AccessibilityContext';
 
 export const InsightsPage: React.FC = () => {
+  const { t, language } = useAccessibility();
+
   const barData = [
     { month: 'May', tasks: 24, hoursSaved: 68 },
     { month: 'Jun', tasks: 42, hoursSaved: 110 },
@@ -12,9 +15,9 @@ export const InsightsPage: React.FC = () => {
   ];
 
   const pieData = [
-    { name: '100% High Match', value: 65, color: '#06B6D4' },
-    { name: 'Medium Match', value: 25, color: '#10B981' },
-    { name: 'Action Needed', value: 10, color: '#F59E0B' },
+    { name: language === 'kn' ? '100% ಹೆಚ್ಚಿನ ಹೊಂದಾಣಿಕೆ' : language === 'hi' ? '100% उच्च मिलान' : '100% High Match', value: 65, color: '#06B6D4' },
+    { name: language === 'kn' ? 'ಮಧ್ಯಮ ಹೊಂದಾಣಿಕೆ' : language === 'hi' ? 'मध्यम मिलान' : 'Medium Match', value: 25, color: '#10B981' },
+    { name: language === 'kn' ? 'ಕ್ರಮ ಅಗತ್ಯವಿದೆ' : language === 'hi' ? 'कार्रवाई आवश्यक' : 'Action Needed', value: 10, color: '#F59E0B' },
   ];
 
   return (
@@ -26,8 +29,8 @@ export const InsightsPage: React.FC = () => {
           <div className="flex items-center gap-2 text-xs font-semibold text-cyan-400 mb-1">
             <LayoutDashboard className="w-4 h-4" /> System Analytics & Impact Telemetry
           </div>
-          <h1 className="text-3xl font-extrabold text-white">Insights & Demo Results</h1>
-          <p className="text-xs text-slate-400 mt-1">Live metrics on documents parsed, applications generated, and time saved for citizens.</p>
+          <h1 className="text-3xl font-extrabold text-white">{t('insightsTitle')}</h1>
+          <p className="text-xs text-slate-400 mt-1">{t('insightsSubtitle')}</p>
         </div>
 
         <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5">

@@ -11,7 +11,7 @@ export const WorkspacePage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setAIState } = useBackgroundState();
-  const { speak, language } = useAccessibility();
+  const { speak, language, t } = useAccessibility();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<DocumentAnalysisResult | null>(null);
 
@@ -41,7 +41,7 @@ export const WorkspacePage: React.FC = () => {
         <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mx-auto text-cyan-400 animate-bounce">
           <Sparkles className="w-8 h-8 animate-spin" style={{ animationDuration: '3s' }} />
         </div>
-        <h2 className="text-xl font-bold text-slate-100">AI Engine Synthesizing Structured Understanding...</h2>
+        <h2 className="text-xl font-bold text-slate-100">{t('aiProcessing')}</h2>
         <p className="text-xs text-slate-400">Parsing document schemas, missing field requirements, and issuing authority verification.</p>
         
         <div className="max-w-md mx-auto h-2 bg-slate-800 rounded-full overflow-hidden">
@@ -53,6 +53,8 @@ export const WorkspacePage: React.FC = () => {
 
   if (!data) return null;
 
+  const currentSummary = data.plainLanguageExplanation[language] || data.summary;
+
   return (
     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
@@ -60,7 +62,7 @@ export const WorkspacePage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-3xl border border-slate-800/80">
         <div>
           <div className="flex items-center gap-2 text-xs text-cyan-400 font-semibold mb-1">
-            <Sparkles className="w-4 h-4" /> AI Structured Intent Analysis
+            <Sparkles className="w-4 h-4" /> {t('workspaceTitle')}
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{data.documentType}</h1>
           <p className="text-xs text-slate-400 mt-1">Issued by: <span className="text-slate-200 font-medium">{data.issuingAuthority}</span></p>
@@ -68,18 +70,18 @@ export const WorkspacePage: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-3">
           <span className="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-cyan-400" /> ~{data.estimatedMinutes} Mins to Complete
+            <Clock className="w-3.5 h-3.5 text-cyan-400" /> ~{data.estimatedMinutes} Mins
           </span>
           <span className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5" /> {(data.confidenceScore * 100).toFixed(0)}% AI Confidence
           </span>
           <button
             onClick={() => {
-              speak(`Document Type: ${data.documentType}. ${data.plainLanguageExplanation[language] || data.summary}`, language);
+              speak(currentSummary, language);
             }}
             className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 text-white text-xs font-semibold hover:opacity-90 transition shadow-md shadow-cyan-500/20"
           >
-            🔊 Read Breakdown Aloud
+            🔊 {t('btnRead')} ({language.toUpperCase()})
           </button>
         </div>
       </div>
@@ -92,9 +94,9 @@ export const WorkspacePage: React.FC = () => {
           {/* AI Plain Language Summary Box */}
           <div className="glass-panel p-6 rounded-3xl border border-cyan-500/30 space-y-3 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-300">Simplified Summary ({language.toUpperCase()})</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-300">{t('plainExplanation')} ({language.toUpperCase()})</h3>
             <p className="text-sm text-slate-200 leading-relaxed font-medium">
-              {data.plainLanguageExplanation[language] || data.summary}
+              {currentSummary}
             </p>
           </div>
 
@@ -102,9 +104,9 @@ export const WorkspacePage: React.FC = () => {
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-cyan-400" /> Auto-Extracted Form Fields
+                <FileText className="w-4 h-4 text-cyan-400" /> {t('fieldBreakdown')}
               </h3>
-              <span className="text-xs text-slate-400">{data.extractedFields.length} Fields Parsed</span>
+              <span className="text-xs text-slate-400">{data.extractedFields.length} Fields</span>
             </div>
 
             <div className="space-y-2.5">
@@ -138,13 +140,13 @@ export const WorkspacePage: React.FC = () => {
           <div className="p-6 rounded-3xl bg-gradient-to-r from-cyan-900/40 via-emerald-900/40 to-slate-900 border border-cyan-500/40 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h4 className="text-sm font-bold text-white">Ready to complete this application?</h4>
-              <p className="text-xs text-slate-300 mt-1">AI has prepared an adaptive 3-step form pre-filled with verified fields.</p>
+              <p className="text-xs text-slate-300 mt-1">AI has prepared an adaptive form pre-filled with verified fields.</p>
             </div>
             <button
               onClick={() => navigate('/recommendations', { state: { autoOpenFirst: true } })}
               className="px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/25 hover:scale-105 transition flex items-center gap-2 whitespace-nowrap"
             >
-              Open Adaptive Form <ArrowRight className="w-4 h-4" />
+              {t('btnFillForm')} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
@@ -173,7 +175,7 @@ export const WorkspacePage: React.FC = () => {
           {/* Required Supporting Documents Checklist */}
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
             <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-emerald-400" /> Mandatory Attachments
+              <CheckCircle className="w-4 h-4 text-emerald-400" /> {t('requiredDocs')}
             </h3>
             <div className="space-y-2.5 text-xs">
               {data.requiredDocuments.map((doc, i) => (
@@ -188,7 +190,7 @@ export const WorkspacePage: React.FC = () => {
           {/* Important Deadlines Card */}
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
             <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-cyan-400" /> Key Deadlines & Timelines
+              <Clock className="w-4 h-4 text-cyan-400" /> Key Deadlines
             </h3>
             <div className="space-y-2.5">
               {data.importantDates.map((item, i) => (

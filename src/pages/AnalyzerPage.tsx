@@ -10,8 +10,8 @@ import { useAccessibility } from '@/context/AccessibilityContext';
 export const AnalyzerPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { setAIState, setFocalRect } = useBackgroundState();
-  const { speak, language } = useAccessibility();
+  const { setAIState } = useBackgroundState();
+  const { speak, language, t } = useAccessibility();
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<DocumentAnalysisResult | null>(null);
 
@@ -20,7 +20,7 @@ export const AnalyzerPage: React.FC = () => {
   const runAnalysis = async (queryText: string) => {
     setAnalyzing(true);
     setAIState('documentUpload');
-    speak(`Analyzing document: ${queryText}`, language);
+    speak(queryText, language);
 
     const res = await analyzeDocumentOrInput(queryText);
     setResult(res);
@@ -39,15 +39,15 @@ export const AnalyzerPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold text-cyan-400 mb-1">
-            <FileText className="w-4 h-4" /> Multimodal Document & Image OCR Intelligence
+            <FileText className="w-4 h-4" /> Multimodal Document Intelligence
           </div>
-          <h1 className="text-3xl font-extrabold text-white">Document Analyzer</h1>
-          <p className="text-xs text-slate-400 mt-1">Upload scanned forms or pick sample documents to extract structured metadata.</p>
+          <h1 className="text-3xl font-extrabold text-white">{t('analyzerTitle')}</h1>
+          <p className="text-xs text-slate-400 mt-1">{t('analyzerSubtitle')}</p>
         </div>
 
-        {/* Preset Sample Document Selector for Live Judging Demo */}
+        {/* Preset Sample Document Selector */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400 mr-1 hidden sm:inline">Try Sample:</span>
+          <span className="text-xs font-semibold text-slate-400 mr-1 hidden sm:inline">{t('btnAnalyzeSample')}:</span>
           <button
             onClick={() => runAnalysis('Income Certificate Tahsil Form 7')}
             className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-400 text-xs font-medium text-slate-200 transition"
@@ -98,7 +98,7 @@ export const AnalyzerPage: React.FC = () => {
                   <p><span className="text-cyan-400">REF_NO:</span> RD003849204812</p>
                   <p><span className="text-cyan-400">AUTHORITY:</span> {result?.issuingAuthority || 'Govt Revenue Dept'}</p>
                   <p className="line-clamp-4 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 text-[10px]">
-                    "{result?.summary || 'Extracting legal provisions and clauses from uploaded scan...'}"
+                    "{result?.plainLanguageExplanation[language] || result?.summary || 'Extracting legal provisions...'}"
                   </p>
                 </div>
               </div>
@@ -109,7 +109,7 @@ export const AnalyzerPage: React.FC = () => {
                   onClick={() => runAnalysis('SSP Post-Matric Scholarship Form')}
                   className="w-full py-3 rounded-xl bg-slate-900/80 border border-dashed border-slate-700 hover:border-cyan-400 text-xs text-slate-300 hover:text-white transition flex items-center justify-center gap-2"
                 >
-                  <Upload className="w-4 h-4 text-cyan-400" /> Click to Upload Another Document
+                  <Upload className="w-4 h-4 text-cyan-400" /> {t('dropzoneText')}
                 </button>
               </div>
             </div>
@@ -125,13 +125,13 @@ export const AnalyzerPage: React.FC = () => {
               <div className="glass-panel p-6 rounded-3xl border border-cyan-500/40 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold text-cyan-400 uppercase tracking-wider">
-                    <Globe className="w-4 h-4" /> AI Trilingual Legal Simplifier
+                    <Globe className="w-4 h-4" /> {t('plainExplanation')}
                   </div>
                   <button
                     onClick={() => speak(result.plainLanguageExplanation[language] || result.summary, language)}
                     className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-semibold hover:bg-cyan-500/30 transition flex items-center gap-1.5"
                   >
-                    <Volume2 className="w-3.5 h-3.5" /> Read Aloud ({language.toUpperCase()})
+                    <Volume2 className="w-3.5 h-3.5" /> {t('btnRead')} ({language.toUpperCase()})
                   </button>
                 </div>
 
@@ -145,7 +145,7 @@ export const AnalyzerPage: React.FC = () => {
               {/* Extracted Fields Metadata */}
               <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
                 <h3 className="text-sm font-bold text-slate-100 flex items-center justify-between">
-                  <span>Structured Fields Extracted</span>
+                  <span>{t('fieldBreakdown')}</span>
                   <span className="text-xs font-medium text-emerald-400">{(result.confidenceScore * 100).toFixed(0)}% Accuracy</span>
                 </h3>
 
@@ -169,14 +169,14 @@ export const AnalyzerPage: React.FC = () => {
                   onClick={() => navigate('/workspace', { state: { query: result.documentType } })}
                   className="w-full sm:w-auto flex-1 px-5 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs hover:bg-slate-700 transition flex items-center justify-center gap-2"
                 >
-                  <Eye className="w-4 h-4 text-cyan-400" /> View in AI Workspace
+                  <Eye className="w-4 h-4 text-cyan-400" /> {t('navWorkspace')}
                 </button>
 
                 <button
                   onClick={() => navigate('/recommendations', { state: { query: result.documentType } })}
                   className="w-full sm:w-auto flex-1 px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/25 hover:scale-105 transition flex items-center justify-center gap-2"
                 >
-                  Generate Adaptive Form <ArrowRight className="w-4 h-4" />
+                  {t('btnFillForm')} <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </>
@@ -184,7 +184,7 @@ export const AnalyzerPage: React.FC = () => {
 
         </div>
 
-      </div>
+        </div>
 
     </div>
   );

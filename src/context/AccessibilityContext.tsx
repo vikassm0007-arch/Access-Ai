@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { SupportedLanguage, FontSizeScale } from '@/types/accessai';
 import { useBackgroundState } from './BackgroundStateContext';
 import { speakText, stopSpeech, isTTSSupported } from '@/lib/tts';
+import { getTranslation } from '@/lib/translations';
 
 interface AccessibilityContextValue {
   highContrast: boolean;
@@ -16,6 +17,7 @@ interface AccessibilityContextValue {
   speak: (text: string, overrideLang?: SupportedLanguage) => void;
   stop: () => void;
   ttsSupported: boolean;
+  t: (key: string) => string;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextValue | undefined>(undefined);
@@ -31,6 +33,10 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     setTtsSupported(isTTSSupported());
   }, []);
+
+  const t = useCallback((key: string) => {
+    return getTranslation(key, language);
+  }, [language]);
 
   const handleSpeak = useCallback((text: string, overrideLang?: SupportedLanguage) => {
     const langToUse = overrideLang || language;
@@ -75,6 +81,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
         speak: handleSpeak,
         stop: handleStop,
         ttsSupported,
+        t,
       }}
     >
       {children}

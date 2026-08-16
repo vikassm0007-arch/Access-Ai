@@ -18,6 +18,7 @@ export const AccessibilityPage: React.FC = () => {
     speak,
     stop,
     ttsSupported,
+    t,
   } = useAccessibility();
 
   const handleTestTTS = () => {
@@ -26,9 +27,9 @@ export const AccessibilityPage: React.FC = () => {
     } else {
       const sampleText =
         language === 'kn'
-          ? 'ಆಕ್ಸೆಸ್ ಎಐ ಗೆ ಸುಸ್ವಾಗತ. ಇದು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಎಐ ಸಹಾಯಕ.'
+          ? 'ಆಕ್ಸೆಸ್ ಎಐ ಗೆ ಸುಸ್ವಾಗತ. ಇದು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಎಐ ಸಹಾಯಕ. ಡಿಜಿಟಲ್ ಸೇವೆಗಳನ್ನು ಎಲ್ಲರಿಗೂ ಸುಲಭಗೊಳಿಸಲಾಗುತ್ತದೆ.'
           : language === 'hi'
-          ? 'एक्सेस एआई में आपका स्वागत है। यह आपका व्यक्तिगत एआई सहायक है।'
+          ? 'एक्सेस एआई में आपका स्वागत है। यह आपका व्यक्तिगत एआई सहायक है। सभी डिजिटल सेवाओं को सरल बनाया जा रहा है।'
           : 'Welcome to ACCESS AI. Your adaptive accessibility layer for digital services.';
       speak(sampleText, language);
     }
@@ -43,8 +44,8 @@ export const AccessibilityPage: React.FC = () => {
           <div className="flex items-center gap-2 text-xs font-semibold text-purple-400 mb-1">
             <Eye className="w-4 h-4" /> Universal Access & Customization Engine
           </div>
-          <h1 className="text-3xl font-extrabold text-white">Accessibility Center</h1>
-          <p className="text-xs text-slate-400 mt-1">Customize global visual themes, typography scales, trilingual voice output, and plain language settings.</p>
+          <h1 className="text-3xl font-extrabold text-white">{t('accessCenterTitle')}</h1>
+          <p className="text-xs text-slate-400 mt-1">{t('accessCenterSubtitle')}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -67,9 +68,9 @@ export const AccessibilityPage: React.FC = () => {
               <div className="space-y-1">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   {highContrast ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-cyan-400" />}
-                  High-Contrast Contrast Mode
+                  {t('themeTitle')}
                 </h3>
-                <p className="text-xs text-slate-400">Fades decorative dynamic mesh/orbs to 0 opacity over a clean #000000 pitch-black base.</p>
+                <p className="text-xs text-slate-400">{t('highContrastLabel')}</p>
               </div>
 
               <button
@@ -88,15 +89,15 @@ export const AccessibilityPage: React.FC = () => {
           {/* Typography & Font Scaling Box */}
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Type className="w-4 h-4 text-cyan-400" /> Typography Scale & Legibility
+              <Type className="w-4 h-4 text-cyan-400" /> {t('fontSizeTitle')}
             </h3>
             <p className="text-xs text-slate-400">Scale interface text sizes globally across all pages without layout shift.</p>
 
             <div className="grid grid-cols-3 gap-3">
               {[
-                { scale: 'normal', label: '100% Standard', desc: 'Default 16px' },
-                { scale: 'large', label: '112% Large', desc: '18px Enhanced' },
-                { scale: 'xlarge', label: '125% X-Large', desc: '20px Maximum' },
+                { scale: 'normal', label: t('fontNormal'), desc: '16px' },
+                { scale: 'large', label: t('fontLarge'), desc: '18px' },
+                { scale: 'xlarge', label: t('fontXLarge'), desc: '20px' },
               ].map((item) => (
                 <button
                   key={item.scale}
@@ -118,9 +119,9 @@ export const AccessibilityPage: React.FC = () => {
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 flex items-center justify-between">
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-emerald-400" /> Simplified Plain Language Mode
+                <Sliders className="w-4 h-4 text-emerald-400" /> Plain Language Mode
               </h3>
-              <p className="text-xs text-slate-400">Automatically translates complex legal terms into plain conversational language.</p>
+              <p className="text-xs text-slate-400">Automatically translates complex legal terms into conversational language.</p>
             </div>
 
             <button
@@ -143,7 +144,7 @@ export const AccessibilityPage: React.FC = () => {
           {/* Trilingual Language Selector */}
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Globe className="w-4 h-4 text-cyan-400" /> Primary Regional Language
+              <Globe className="w-4 h-4 text-cyan-400" /> {t('langSelectionTitle')}
             </h3>
             <p className="text-xs text-slate-400">Select your preferred language for instant AI interface synthesis and voice synthesis.</p>
 
@@ -173,12 +174,12 @@ export const AccessibilityPage: React.FC = () => {
           <div className="glass-panel p-6 rounded-3xl border border-slate-800/80 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Volume2 className="w-4 h-4 text-emerald-400" /> Browser Text-to-Speech (TTS) Voice Engine
+                <Volume2 className="w-4 h-4 text-emerald-400" /> Web Speech Voice Engine
               </h3>
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                 ttsSupported ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-red-500/20 text-red-300'
               }`}>
-                {ttsSupported ? 'WEB SPEECH ACTIVE' : 'UNSUPPORTED'}
+                {ttsSupported ? 'ACTIVE' : 'UNSUPPORTED'}
               </span>
             </div>
 
@@ -194,7 +195,7 @@ export const AccessibilityPage: React.FC = () => {
                   : 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-white shadow-cyan-500/20 hover:scale-[1.02]'
               }`}
             >
-              <Volume2 className="w-4 h-4" /> {isSpeaking ? 'Stop Active Voice Playback' : `Test Read Aloud Voice (${language.toUpperCase()})`}
+              <Volume2 className="w-4 h-4" /> {isSpeaking ? t('btnStopVoice') : `${t('btnTestVoice')} (${language.toUpperCase()})`}
             </button>
           </div>
 

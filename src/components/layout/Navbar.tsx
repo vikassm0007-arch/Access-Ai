@@ -7,32 +7,33 @@ import { SupportedLanguage } from '@/types/accessai';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
-  const { highContrast, setHighContrast, language, setLanguage, isSpeaking, speak, stop } = useAccessibility();
+  const { highContrast, setHighContrast, language, setLanguage, isSpeaking, speak, stop, t } = useAccessibility();
   const { aiState } = useBackgroundState();
 
   const navLinks = [
-    { path: '/', label: 'Home', icon: Compass },
-    { path: '/workspace', label: 'AI Workspace', icon: Sparkles },
-    { path: '/analyze', label: 'Analyzer', icon: FileText },
-    { path: '/recommendations', label: 'Matches & Forms', icon: Zap },
-    { path: '/accessibility', label: 'Accessibility', icon: Eye },
-    { path: '/insights', label: 'Insights', icon: LayoutDashboard },
+    { path: '/', labelKey: 'navHome', icon: Compass },
+    { path: '/workspace', labelKey: 'navWorkspace', icon: Sparkles },
+    { path: '/analyze', labelKey: 'navAnalyzer', icon: FileText },
+    { path: '/recommendations', labelKey: 'navRecommendations', icon: Zap },
+    { path: '/accessibility', labelKey: 'navAccessibility', icon: Eye },
+    { path: '/insights', labelKey: 'navInsights', icon: LayoutDashboard },
   ];
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as SupportedLanguage);
+    const newLang = e.target.value as SupportedLanguage;
+    setLanguage(newLang);
   };
 
   const getAIStateBadge = () => {
     switch (aiState) {
       case 'listening':
-        return { text: 'AI Listening…', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 animate-pulse' };
+        return { text: t('aiListening'), color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 animate-pulse' };
       case 'processing':
-        return { text: 'AI Processing…', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 animate-pulse' };
+        return { text: t('aiProcessing'), color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 animate-pulse' };
       case 'documentUpload':
-        return { text: 'Analyzing Document', color: 'bg-blue-500/20 text-blue-300 border-blue-500/40 animate-pulse' };
+        return { text: t('aiDocUpload'), color: 'bg-blue-500/20 text-blue-300 border-blue-500/40 animate-pulse' };
       default:
-        return { text: 'AI Ready', color: 'bg-slate-800/80 text-slate-400 border-slate-700/50' };
+        return { text: t('aiReady'), color: 'bg-slate-800/80 text-slate-400 border-slate-700/50' };
     }
   };
 
@@ -60,7 +61,7 @@ export const Navbar: React.FC = () => {
                     {aiBadge.text}
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400 -mt-0.5 hidden sm:block">Adaptive Accessibility Layer</p>
+                <p className="text-[10px] text-slate-400 -mt-0.5 hidden sm:block">{t('brandSub')}</p>
               </div>
             </Link>
           </div>
@@ -82,7 +83,7 @@ export const Navbar: React.FC = () => {
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
-                    {link.label}
+                    {t(link.labelKey)}
                   </Link>
                 );
               })}
@@ -97,10 +98,10 @@ export const Navbar: React.FC = () => {
                 if (isSpeaking) {
                   stop();
                 } else {
-                  speak('Welcome to ACCESS AI. An adaptive accessibility layer for digital services.');
+                  speak(t('readPageIntro'));
                 }
               }}
-              className={`px-3 py-2 rounded-lg border transition text-xs flex items-center gap-2 font-medium ${
+              className={`px-3.5 py-2 rounded-lg border transition text-xs flex items-center gap-2 font-medium ${
                 isSpeaking
                   ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 animate-pulse'
                   : 'bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-cyan-500/40 hover:text-white'
@@ -109,7 +110,7 @@ export const Navbar: React.FC = () => {
               aria-label="Text to speech"
             >
               <Volume2 className="w-4 h-4 text-cyan-400" />
-              <span className="hidden sm:inline text-xs font-medium">{isSpeaking ? 'Stop Voice' : 'Read'}</span>
+              <span className="hidden sm:inline text-xs font-medium">{isSpeaking ? t('btnStopVoice') : t('btnRead')}</span>
             </button>
 
             {/* Language Switcher */}
@@ -158,7 +159,7 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 <Icon className="w-4 h-4" />
-                <span className="text-[10px]">{link.label}</span>
+                <span className="text-[10px]">{t(link.labelKey)}</span>
               </Link>
             );
           })}

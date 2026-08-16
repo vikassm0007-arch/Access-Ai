@@ -10,7 +10,7 @@ import { useAccessibility } from '@/context/AccessibilityContext';
 export const RecommendationsPage: React.FC = () => {
   const location = useLocation();
   const { setAIState } = useBackgroundState();
-  const { speak, language } = useAccessibility();
+  const { speak, language, t } = useAccessibility();
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<RecommendationMatch[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -54,11 +54,14 @@ export const RecommendationsPage: React.FC = () => {
 
   const handleNextStep = (maxSteps: number) => {
     if (activeStep < maxSteps) {
-      setActiveStep((prev) => prev + 1);
-      speak(`Step ${activeStep + 1} of ${maxSteps}`, language);
+      const nextNum = activeStep + 1;
+      setActiveStep(nextNum);
+      const stepText = language === 'kn' ? `ಹಂತ ${nextNum}` : language === 'hi' ? `चरण ${nextNum}` : `Step ${nextNum} of ${maxSteps}`;
+      speak(stepText, language);
     } else {
       setAIState('processing');
-      speak('Application submitted successfully to state portal', language);
+      const submitText = language === 'kn' ? 'ಅರ್ಜಿಯನ್ನು ರಾಜ್ಯ ಪೋರ್ಟಲ್‌ಗೆ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ' : language === 'hi' ? 'आवेदन राज्य पोर्टल पर सफलतापूर्वक प्रस्तुत किया गया' : 'Application submitted successfully to state portal';
+      speak(submitText, language);
       setTimeout(() => {
         setFormSubmitted(true);
         setAIState('idle');
@@ -75,8 +78,8 @@ export const RecommendationsPage: React.FC = () => {
           <div className="flex items-center gap-2 text-xs font-semibold text-cyan-400 mb-1">
             <Zap className="w-4 h-4" /> AI Dynamic Match Engine & Form Synthesizer
           </div>
-          <h1 className="text-3xl font-extrabold text-white">AI Recommendations & Generated Forms</h1>
-          <p className="text-xs text-slate-400 mt-1">Based on your document analysis, AI has ranked eligible schemes and generated simplified step forms.</p>
+          <h1 className="text-3xl font-extrabold text-white">{t('recommendationsTitle')}</h1>
+          <p className="text-xs text-slate-400 mt-1">{t('recommendationsSubtitle')}</p>
         </div>
 
         <span className="px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold self-start sm:self-auto">
@@ -87,7 +90,7 @@ export const RecommendationsPage: React.FC = () => {
       {loading ? (
         <div className="glass-panel p-12 rounded-3xl text-center space-y-4 max-w-xl mx-auto">
           <Sparkles className="w-10 h-10 text-cyan-400 animate-spin mx-auto" />
-          <h3 className="text-base font-bold text-white">Matching Profile & Generating Adaptive Form UI...</h3>
+          <h3 className="text-base font-bold text-white">{t('aiProcessing')}</h3>
           <p className="text-xs text-slate-400">Synthesizing field validation rules from state database schemas.</p>
         </div>
       ) : (
@@ -132,7 +135,7 @@ export const RecommendationsPage: React.FC = () => {
                         <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                           {match.matchPercentage}%
                         </span>
-                        <span className="text-xs font-bold text-cyan-400">Match</span>
+                        <span className="text-xs font-bold text-cyan-400">{t('matchScore')}</span>
                       </div>
 
                       {/* Animated Progress Bar */}

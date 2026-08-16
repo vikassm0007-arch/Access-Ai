@@ -8,14 +8,14 @@ import { useAccessibility } from '@/context/AccessibilityContext';
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { setAIState } = useBackgroundState();
-  const { speak, language } = useAccessibility();
+  const { speak, language, t } = useAccessibility();
   const [activeTab, setActiveTab] = useState<'upload' | 'paste' | 'goal' | 'category'>('upload');
   const [inputText, setInputText] = useState('');
   const [dragActive, setDragActive] = useState(false);
 
   const handleDemoPreset = (presetText: string, targetPath: string) => {
     setAIState('processing');
-    speak(`Analyzing request: ${presetText}`, language);
+    speak(presetText, language);
     setTimeout(() => {
       setAIState('idle');
       navigate(targetPath, { state: { query: presetText } });
@@ -25,7 +25,7 @@ export const LandingPage: React.FC = () => {
   const handleStartAnalysis = (queryText?: string) => {
     const textToSubmit = queryText || inputText || 'Post-Matric Scholarship Application for Engineering Students';
     setAIState('processing');
-    speak('Analyzing document and adapting interface', language);
+    speak(textToSubmit, language);
     setTimeout(() => {
       setAIState('idle');
       if (activeTab === 'upload' || activeTab === 'paste') {
@@ -49,7 +49,7 @@ export const LandingPage: React.FC = () => {
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 via-emerald-500/10 to-blue-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold shadow-lg shadow-cyan-500/10"
         >
           <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-spin" style={{ animationDuration: '4s' }} />
-          <span>ACCESSAI — Frontend Development using AI 2026</span>
+          <span>{t('heroBadge')}</span>
         </motion.div>
 
         {/* Headline */}
@@ -59,20 +59,20 @@ export const LandingPage: React.FC = () => {
           transition={{ delay: 0.1 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight"
         >
-          Stop filling complex forms.{' '}
+          {t('heroTitle1')}{' '}
           <span className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500 bg-clip-text text-transparent">
-            Let AI adapt the interface to you.
+            {t('heroTitle2')}
           </span>
         </motion.h1>
 
-        {/* 10-Second Judge Pitch Subtitle */}
+        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto"
         >
-          Upload any confusing government form, paste dense legal text, or state your goal. ACCESSAI parses intent, simplifies legal jargon, and dynamically generates step-by-step forms in your language.
+          {t('heroSubtitle')}
         </motion.p>
 
         {/* Core Story Flow Pipeline Indicator */}
@@ -109,7 +109,7 @@ export const LandingPage: React.FC = () => {
                 : 'bg-slate-800/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
-            <Upload className="w-4 h-4" /> Upload Document
+            <Upload className="w-4 h-4" /> {t('btnInspectDoc')}
           </button>
 
           <button
@@ -131,7 +131,7 @@ export const LandingPage: React.FC = () => {
                 : 'bg-slate-800/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
-            <Target className="w-4 h-4" /> Type a Goal
+            <Target className="w-4 h-4" /> {t('btnFindScholarships')}
           </button>
 
           <button
@@ -142,7 +142,7 @@ export const LandingPage: React.FC = () => {
                 : 'bg-slate-800/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
-            <Grid className="w-4 h-4" /> Browse Categories
+            <Grid className="w-4 h-4" /> {t('navRecommendations')}
           </button>
         </div>
 
@@ -160,13 +160,13 @@ export const LandingPage: React.FC = () => {
             <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mx-auto mb-4 text-cyan-400">
               <Upload className="w-8 h-8" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">Drag & drop your PDF or image form here</h3>
+            <h3 className="text-base font-bold text-white mb-1">{t('dropzoneText')}</h3>
             <p className="text-xs text-slate-400 mb-4">Supports PDF, PNG, JPG scans up to 15MB</p>
             <button
               onClick={(e) => { e.stopPropagation(); handleStartAnalysis('SSP Post-Matric Scholarship Form'); }}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 hover:scale-105 transition"
             >
-              Select File to Analyze <ArrowRight className="w-4 h-4" />
+              {t('btnInspectDoc')} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -178,7 +178,7 @@ export const LandingPage: React.FC = () => {
               rows={4}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Paste dense legal guidelines, eligibility terms, or form instructions here..."
+              placeholder={t('inputPlaceholder')}
               className="w-full rounded-2xl bg-slate-900/60 border border-slate-700/80 p-4 text-sm text-slate-100 focus:outline-none focus:border-cyan-400 placeholder:text-slate-500"
             />
             <div className="flex justify-end">
@@ -186,7 +186,7 @@ export const LandingPage: React.FC = () => {
                 onClick={() => handleStartAnalysis()}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 hover:scale-105 transition"
               >
-                Analyze & Simplify Text <ArrowRight className="w-4 h-4" />
+                {t('btnSend')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -199,7 +199,7 @@ export const LandingPage: React.FC = () => {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="e.g. 'I want to apply for engineering scholarship for Category 3A'"
+              placeholder={t('inputPlaceholder')}
               className="w-full rounded-2xl bg-slate-900/60 border border-slate-700/80 p-4 text-sm text-slate-100 focus:outline-none focus:border-cyan-400 placeholder:text-slate-500"
             />
             <div className="flex justify-end">
@@ -207,7 +207,7 @@ export const LandingPage: React.FC = () => {
                 onClick={() => handleStartAnalysis(inputText || 'Engineering Scholarship Category 3A')}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 hover:scale-105 transition"
               >
-                Find & Build Adaptive Form <ArrowRight className="w-4 h-4" />
+                {t('btnFindScholarships')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -217,10 +217,10 @@ export const LandingPage: React.FC = () => {
         {activeTab === 'category' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              { title: 'Post-Matric Scholarships', desc: '100% tuition reimbursement for higher education', query: 'Post-Matric Scholarship' },
-              { title: 'Income & Revenue Certificates', desc: 'Tahsil Revenue Form 7 & RD verification', query: 'Income Certificate' },
-              { title: 'Hostel & Housing Grants', desc: 'Vidyasiri rent allowance & free residence', query: 'Hostel Grant' },
-              { title: 'Disability Support Schemes', desc: 'Assistive tech & pension allowance', query: 'Disability Support' },
+              { title: language === 'kn' ? 'ಪೋಸ್ಟ್-ಮೆಟ್ರಿಕ್ ವಿದ್ಯಾರ್ಥಿವೇತನಗಳು' : language === 'hi' ? 'पोस्ट-मैट्रिक छात्रवृत्ति' : 'Post-Matric Scholarships', desc: language === 'kn' ? '100% ಕಾಲೇಜು ಶುಲ್ಕ ಮರುಪಾವತಿ' : language === 'hi' ? '100% शुल्क वापसी' : '100% tuition reimbursement for higher education', query: 'Post-Matric Scholarship' },
+              { title: language === 'kn' ? 'ಆದಾಯ ಪ್ರಮಾಣಪತ್ರಗಳು' : language === 'hi' ? 'आय प्रमाण पत्र' : 'Income & Revenue Certificates', desc: language === 'kn' ? 'ತಹಶೀಲ್ದಾರ್ ಕಂದಾಯ ಫಾರ್ಮ್ 7 ಸತ್ಯಾಪನೆ' : language === 'hi' ? 'तहसीलदार राजस्व फॉर्म सत्यापन' : 'Tahsil Revenue Form 7 & RD verification', query: 'Income Certificate' },
+              { title: language === 'kn' ? 'ಹಾಸ್ಟೆಲ್ ಮತ್ತು ವಸತಿ ಅನುದಾನ' : language === 'hi' ? 'छात्रावास और आवास अनुदान' : 'Hostel & Housing Grants', desc: language === 'kn' ? 'ವಿದ್ಯಾಸಿರಿ ಬಾಡಿಗೆ ಭತ್ಯೆ' : language === 'hi' ? 'विद्यासिरी किराया भत्ता' : 'Vidyasiri rent allowance & free residence', query: 'Hostel Grant' },
+              { title: language === 'kn' ? 'ವಿಕಲಚೇತನರ ನೆರವು ಯೋಜನೆಗಳು' : language === 'hi' ? 'दिव्यांग सहायता योजनाएं' : 'Disability Support Schemes', desc: language === 'kn' ? 'ಸಹಾಯಕರ ತಂತ್ರಜ್ಞಾನ ಮತ್ತು ಪಿಂಚಣಿ' : language === 'hi' ? 'सहायक तकनीक और पेंशन' : 'Assistive tech & pension allowance', query: 'Disability Support' },
             ].map((cat, idx) => (
               <div
                 key={idx}
@@ -239,38 +239,6 @@ export const LandingPage: React.FC = () => {
 
       </motion.div>
 
-      {/* 1-Click Judge Demo Preset Buttons */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="mt-8 text-center max-w-2xl mx-auto"
-      >
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Quick Judging Demo Triggers</p>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <button
-            onClick={() => handleDemoPreset('Karnataka SSP Post-Matric Scholarship Application', '/analyze')}
-            className="px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-300 text-xs font-medium hover:border-cyan-400 hover:bg-slate-800 transition shadow-sm"
-          >
-            ⚡ Test Document Analyzer (SSP Form)
-          </button>
-
-          <button
-            onClick={() => handleDemoPreset('Engineering Student Higher Education Scholarship', '/recommendations')}
-            className="px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-emerald-500/30 text-emerald-300 text-xs font-medium hover:border-emerald-400 hover:bg-slate-800 transition shadow-sm"
-          >
-            ⚡ Test Adaptive Recommendation Engine
-          </button>
-
-          <button
-            onClick={() => navigate('/accessibility')}
-            className="px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-purple-500/30 text-purple-300 text-xs font-medium hover:border-purple-400 hover:bg-slate-800 transition shadow-sm"
-          >
-            ⚡ Test Accessibility & Voice Controls
-          </button>
-        </div>
-      </motion.div>
-
       {/* Feature Highlights Grid */}
       <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
         
@@ -278,9 +246,9 @@ export const LandingPage: React.FC = () => {
           <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
             <Zap className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-slate-100">Dynamic UI Generation</h3>
+          <h3 className="text-sm font-bold text-slate-100">{t('feat1Title')}</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Instead of standard text chat, AI synthesizes tailored step-by-step form UIs with field validations directly from raw documents.
+            {t('feat1Desc')}
           </p>
         </div>
 
@@ -288,9 +256,9 @@ export const LandingPage: React.FC = () => {
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <Globe className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-slate-100">Trilingual Legal Simplifier</h3>
+          <h3 className="text-sm font-bold text-slate-100">{t('feat2Title')}</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Transforms dense jargon into plain language across English, Kannada (ಕನ್ನಡ), and Hindi (हिंदी) with browser Web Speech voice output.
+            {t('feat2Desc')}
           </p>
         </div>
 
@@ -298,9 +266,9 @@ export const LandingPage: React.FC = () => {
           <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
             <ShieldCheck className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-slate-100">WCAG AAA Accessibility</h3>
+          <h3 className="text-sm font-bold text-slate-100">{t('feat3Title')}</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Instant high-contrast theme, responsive font scale, reduced-motion controls, and zero decorative distraction when needed.
+            {t('feat3Desc')}
           </p>
         </div>
 
