@@ -13,15 +13,15 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
   useEffect(() => {
     if (!isPlaying) return;
 
-    // Timeline Sequence
-    const timer1 = setTimeout(() => setPhase('lightBurst'), 1800);
-    const timer2 = setTimeout(() => setPhase('morph'), 3200);
-    const timer3 = setTimeout(() => setPhase('isometric'), 4800);
+    // Extended Timeline Sequence (+1.5s - 3s for maximum legibility and cinematic ease)
+    const timer1 = setTimeout(() => setPhase('lightBurst'), 3000);
+    const timer2 = setTimeout(() => setPhase('morph'), 5200);
+    const timer3 = setTimeout(() => setPhase('isometric'), 7400);
     const timer4 = setTimeout(() => {
       setPhase('complete');
       setIsPlaying(false);
       if (onComplete) onComplete();
-    }, 6500);
+    }, 9500);
 
     return () => {
       clearTimeout(timer1);
@@ -60,7 +60,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
       <motion.div
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         className="fixed inset-0 z-[99999] bg-[#05070D] overflow-hidden flex items-center justify-center select-none"
       >
         {/* Ambient Volumetric Ray Light Background */}
@@ -68,22 +68,22 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
           {/* Volumetric Cyan Beam */}
           <motion.div
             animate={{
-              opacity: phase === 'lightBurst' ? 0.9 : 0.4,
-              scale: phase === 'lightBurst' ? 1.6 : 1,
+              opacity: phase === 'lightBurst' ? 0.95 : 0.4,
+              scale: phase === 'lightBurst' ? 1.7 : 1,
               rotate: [0, 15, -10, 0],
             }}
-            transition={{ duration: 3, ease: 'easeInOut' }}
-            className="absolute -top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#00F0FF]/30 via-cyan-500/10 to-transparent blur-[120px]"
+            transition={{ duration: 4, ease: 'easeInOut' }}
+            className="absolute -top-1/4 -left-1/4 w-[850px] h-[850px] rounded-full bg-gradient-to-br from-[#00F0FF]/35 via-cyan-500/15 to-transparent blur-[120px]"
           />
           {/* Volumetric Violet Beam */}
           <motion.div
             animate={{
-              opacity: phase === 'lightBurst' ? 0.9 : 0.4,
-              scale: phase === 'lightBurst' ? 1.6 : 1,
+              opacity: phase === 'lightBurst' ? 0.95 : 0.4,
+              scale: phase === 'lightBurst' ? 1.7 : 1,
               rotate: [0, -15, 10, 0],
             }}
-            transition={{ duration: 3, ease: 'easeInOut' }}
-            className="absolute -bottom-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-gradient-to-tl from-[#7B2CBF]/40 via-purple-600/10 to-transparent blur-[130px]"
+            transition={{ duration: 4, ease: 'easeInOut' }}
+            className="absolute -bottom-1/4 -right-1/4 w-[850px] h-[850px] rounded-full bg-gradient-to-tl from-[#7B2CBF]/45 via-purple-600/15 to-transparent blur-[130px]"
           />
           {/* Subdued Matte Obsidian Grid Floor */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
@@ -108,7 +108,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
             rotateY: phase === 'isometric' ? -12 : phase === 'morph' ? -4 : 0,
             scale: phase === 'isometric' ? 0.85 : phase === 'morph' ? 0.95 : 1.1,
           }}
-          transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
           className="relative w-full max-w-6xl mx-auto px-4 h-[600px] flex items-center justify-center transform-gpu"
           style={{ transformStyle: 'preserve-3d' }}
         >
@@ -119,7 +119,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                 initial={{ opacity: 0, scale: 0.8, z: -100 }}
                 animate={{ opacity: 1, scale: 1, z: 0 }}
                 exit={{ opacity: 0, scale: 1.3, z: 200 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
                 className="text-center space-y-6 transform-gpu"
                 style={{ transformStyle: 'preserve-3d' }}
               >
@@ -128,8 +128,8 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                   animate={{
                     boxShadow:
                       phase === 'lightBurst'
-                        ? '0 0 60px rgba(0,240,255,0.6), inset 0 0 30px rgba(123,44,191,0.5)'
-                        : '0 0 30px rgba(0,240,255,0.2)',
+                        ? '0 0 70px rgba(0,240,255,0.7), inset 0 0 35px rgba(123,44,191,0.6)'
+                        : '0 0 30px rgba(0,240,255,0.25)',
                   }}
                   className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-900/40 border border-cyan-400/40 backdrop-blur-2xl text-cyan-300 text-xs font-mono uppercase tracking-widest"
                 >
@@ -149,10 +149,10 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                     animate={{
                       textShadow:
                         phase === 'lightBurst'
-                          ? '0 0 40px #00F0FF, 0 0 80px #7B2CBF'
-                          : '0 0 20px rgba(0,240,255,0.5)',
+                          ? '0 0 50px #00F0FF, 0 0 90px #7B2CBF'
+                          : '0 0 25px rgba(0,240,255,0.5)',
                     }}
-                    className="relative text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter bg-gradient-to-r from-[#00F0FF] via-white to-[#7B2CBF] bg-clip-text text-transparent px-4 py-2 rounded-3xl border border-cyan-400/30 backdrop-blur-3xl bg-slate-900/30 shadow-2xl"
+                    className="relative text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter bg-gradient-to-r from-[#00F0FF] via-white to-[#7B2CBF] bg-clip-text text-transparent px-5 py-2.5 rounded-3xl border border-cyan-400/40 backdrop-blur-3xl bg-slate-900/40 shadow-2xl"
                   >
                     Access<span className="text-white">AI</span>
 
@@ -161,8 +161,8 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                       animate={{
                         x: ['-100%', '200%'],
                       }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none"
+                      transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-12 pointer-events-none"
                     />
                   </motion.div>
                 </div>
@@ -179,7 +179,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
             <motion.div
               initial={{ opacity: 0, scale: 0.7, rotateX: 20 }}
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
               className="w-full grid grid-cols-12 gap-4 sm:gap-6 transform-gpu"
               style={{ transformStyle: 'preserve-3d' }}
             >
@@ -187,7 +187,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
               <motion.div
                 initial={{ x: -200, opacity: 0, scale: 0.8 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 1.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="col-span-12 md:col-span-3 glass-panel p-5 rounded-3xl border border-cyan-500/40 bg-slate-900/80 backdrop-blur-2xl shadow-2xl space-y-4"
                 style={{ transform: 'translateZ(40px)' }}
               >
@@ -233,7 +233,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                 <motion.div
                   initial={{ y: -100, opacity: 0, scale: 0.9 }}
                   animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 1.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                   className="p-5 rounded-3xl bg-gradient-to-r from-cyan-950/80 via-purple-950/80 to-slate-900 border border-cyan-400/40 backdrop-blur-2xl flex items-center justify-between shadow-2xl"
                   style={{ transform: 'translateZ(60px)' }}
                 >
@@ -260,7 +260,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                   <motion.div
                     initial={{ y: 150, opacity: 0, scale: 0.8 }}
                     animate={{ y: 0, opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 1.4, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     className="glass-panel p-5 rounded-3xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl space-y-2 shadow-xl"
                     style={{ transform: 'translateZ(30px)' }}
                   >
@@ -275,7 +275,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
                   <motion.div
                     initial={{ y: 150, opacity: 0, scale: 0.8 }}
                     animate={{ y: 0, opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 1.4, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     className="glass-panel p-5 rounded-3xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl space-y-2 shadow-xl"
                     style={{ transform: 'translateZ(30px)' }}
                   >
@@ -300,14 +300,14 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
             animate={{
               width:
                 phase === 'macro'
-                  ? '25%'
+                  ? '30%'
                   : phase === 'lightBurst'
-                  ? '55%'
+                  ? '60%'
                   : phase === 'morph'
-                  ? '85%'
+                  ? '88%'
                   : '100%',
             }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            transition={{ duration: 1.8, ease: 'easeInOut' }}
             className="h-full bg-gradient-to-r from-[#00F0FF] via-emerald-400 to-[#7B2CBF]"
           />
         </div>
