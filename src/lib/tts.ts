@@ -4,6 +4,12 @@ export function isTTSSupported(): boolean {
   return typeof window !== 'undefined';
 }
 
+const LOCAL_VOICE_PACKS: Record<SupportedLanguage, string> = {
+  en: '/voices/english.mp3',
+  kn: '/voices/kannada.mp3',
+  hi: '/voices/hindi.mp3',
+};
+
 const LANGUAGE_CODE_MAP: Record<SupportedLanguage, string> = {
   en: 'en-US',
   kn: 'kn-IN',
@@ -11,6 +17,56 @@ const LANGUAGE_CODE_MAP: Record<SupportedLanguage, string> = {
 };
 
 let currentAudio: HTMLAudioElement | null = null;
+
+/**
+ * Stop any active audio voice playback (custom audio MP3 or WebSpeech API)
+ */
+export function stopSpeech(): void {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+/**
+ * Plays custom pre-recorded audio voice pack for the selected language
+ * (/voices/english.mp3, /voices/kannada.mp3, /voices/hindi.mp3)
+ */
+export function playCustomVoicePack(lang: SupportedLanguage, onEnd?: () => void): boolean {
+  stopSpeech();
+  const audioPath = LOCAL_VOICE_PACKS[lang];
+  if (!audioPath) return false;
+
+  try {
+    const audio = new Audio(audioPath);
+    currentAudio = audio;
+
+    audio.onended = () => {
+      currentAudio = null;
+      if (onEnd) onEnd();
+    };
+
+    audio.onerror = (e) => {
+      console.warn(`Could not load local voice pack at ${audioPath}:`, e);
+      currentAudio = null;
+      if (onEnd) onEnd();
+    };
+
+    audio.play().catch((err) => {
+      console.warn('Voice pack autoplay failed:', err);
+      if (onEnd) onEnd();
+    });
+
+    return true;
+  } catch (err) {
+    console.warn('Failed playing custom audio pack:', err);
+    return false;
+  }
+}
 
 /**
  * Finds if the OS/Browser has a native SpeechSynthesis voice installed for Kannada or Hindi.
@@ -22,7 +78,6 @@ function findVoiceForLanguage(lang: SupportedLanguage): SpeechSynthesisVoice | n
 
   const targetPrefix = lang === 'kn' ? 'kn' : lang === 'hi' ? 'hi' : 'en';
 
-  // Match voice with language prefix
   const matched = voices.find(
     (v) =>
       v.lang.toLowerCase().startsWith(targetPrefix) ||
@@ -34,19 +89,16 @@ function findVoiceForLanguage(lang: SupportedLanguage): SpeechSynthesisVoice | n
 
 /**
  * Streams audio using high-definition voice API fallback (Google Voice Pack stream)
- * for seamless Kannada and Hindi voice playback without requiring local OS voice packs.
  */
 function playOnlineVoiceStream(text: string, lang: SupportedLanguage, onEnd?: () => void): void {
   stopSpeech();
 
-  // Clean text and limit chunk size for URL streaming
   const cleanText = text.replace(/[\n\r]+/g, ' ').trim();
   if (!cleanText) {
     if (onEnd) onEnd();
     return;
   }
 
-  // Slice into 180 character chunks for smooth audio buffering
   const chunks = cleanText.match(/.{1,180}(?:\s+|$)/g) || [cleanText];
   let currentChunkIndex = 0;
 
@@ -76,14 +128,13 @@ function playOnlineVoiceStream(text: string, lang: SupportedLanguage, onEnd?: ()
       playChunk(currentChunkIndex);
     };
 
-    audio.onerror = (e) => {
-      console.warn('Voice pack stream error, trying next chunk or fallback:', e);
+    audio.onerror = () => {
       currentChunkIndex++;
       playChunk(currentChunkIndex);
     };
 
     audio.play().catch((err) => {
-      console.warn('Autoplay audio failed:', err);
+      console.warn('Voice stream autoplay failed:', err);
       if (onEnd) onEnd();
     });
   };
@@ -93,26 +144,24 @@ function playOnlineVoiceStream(text: string, lang: SupportedLanguage, onEnd?: ()
 
 /**
  * Universal Speak Function for English, Kannada, and Hindi.
- * Prefers local Web Speech API if native voice pack is present, otherwise
- * seamlessly streams high-definition online Kannada & Hindi voice packs!
+ * Plays the custom pre-recorded voice packs (/voices/kannada.mp3, /voices/hindi.mp3, /voices/english.mp3),
+ * with fallback to Web Speech API / online stream for dynamic text.
  */
 export function speakText(
   text: string,
   lang: SupportedLanguage = 'en',
   onEnd?: () => void
 ): void {
-  stopSpeech();
-
-  if (!text || text.trim() === '') {
-    if (onEnd) onEnd();
+  // Always try playing the custom voice pack for English, Kannada, and Hindi first
+  const success = playCustomVoicePack(lang, onEnd);
+  if (success) {
     return;
   }
 
-  // Check if browser has local SpeechSynthesis with native voice for Kannada/Hindi
+  // Fallback for dynamic speech text
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     const nativeVoice = findVoiceForLanguage(lang);
 
-    // If English or native voice is installed locally, use WebSpeechUtterance
     if (lang === 'en' || nativeVoice) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -129,7 +178,6 @@ export function speakText(
       };
 
       utterance.onerror = () => {
-        // Fallback to online voice pack stream if WebSpeech fails
         playOnlineVoiceStream(text, lang, onEnd);
       };
 
@@ -138,17 +186,5 @@ export function speakText(
     }
   }
 
-  // Fallback to high-quality streaming voice pack for Kannada & Hindi
   playOnlineVoiceStream(text, lang, onEnd);
-}
-
-export function stopSpeech(): void {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-    currentAudio = null;
-  }
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
 }
