@@ -52,7 +52,7 @@ export const LandingPage: React.FC = () => {
           <span>{t('heroBadge')}</span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -273,6 +273,11 @@ export const LandingPage: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Footer Quote Banner */}
+      <p className="text-[11px] text-center text-slate-400/90 font-medium tracking-wide pt-8">
+        {t('bridgingQuote')}
+      </p>
 
     </div>
   );

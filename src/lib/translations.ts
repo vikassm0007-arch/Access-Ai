@@ -36,15 +36,20 @@ export const translations: Translations = {
 
   // Hero Section
   heroBadge: { en: 'Universal Accessibility AI Engine', kn: 'ಸಾರ್ವತ್ರಿಕ ಪ್ರವೇಶಸಾಧ್ಯತೆ AI ಎಂಜಿನ್', hi: 'सार्वभौमिक पहुंच एआई इंजन' },
-  heroTitle1: { en: 'Bridging Digital Divide with', kn: 'ಡಿಜಿಟಲ್ ಕಂದಕವನ್ನು ನಿವಾರಿಸಿ', hi: 'डिजिटल विभाजन को दूर करें' },
-  heroTitle2: { en: 'Adaptive AI & Multilingual Voice', kn: 'ಅಡಾಪ್ಟಿವ್ AI ಮತ್ತು ಬಹುಭಾಷಾ ಧ್ವನಿಯೊಂದಿಗೆ', hi: 'अनुकूली एआई और बहुभाषी आवाज के साथ' },
+  heroTitle1: { en: 'Stop filling complex forms.', kn: 'ಸಂಕೀರ್ಣ ಅರ್ಜಿಗಳನ್ನು ತುಂಬುವುದನ್ನು ನಿಲ್ಲಿಸಿ.', hi: 'जटिल फॉर्म भरना बंद करें।' },
+  heroTitle2: { en: 'Let AI adapt the interface to you.', kn: 'AI ನಿಮಗಾಗಿ ಇಂಟರ್‌ಫೇಸ್‌ ಅನ್ನು ಹೊಂದಿಸಲಿ.', hi: 'AI को अपने लिए इंटरफेस अनुकूलित करने दें।' },
   heroSubtitle: {
     en: 'Simplifying government schemes, scholarship forms, and document inspection with instant Kannada, Hindi, and English voice synthesis.',
     kn: 'ತತ್ಕ್ಷಣದ ಕನ್ನಡ, ಹಿಂದಿ ಮತ್ತು ಇಂಗ್ಲಿಷ್ ಧ್ವನಿ ಸಂಶ್ಲೇಷಣೆಯೊಂದಿಗೆ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು, ವಿದ್ಯಾರ್ಥಿವೇತನ ಅರ್ಜಿಗಳು ಮತ್ತು ದಾಖಲೆ ಪರಿಶೀಲನೆಯನ್ನು ಸರಳಗೊಳಿಸುವುದು.',
     hi: 'तत्काल कन्नड़, हिंदी और अंग्रेजी आवाज संश्लेषण के साथ सरकारी योजनाओं, छात्रवृत्ति फार्मों और दस्तावेज़ निरीक्षक को सरल बनाना।',
   },
+  bridgingQuote: {
+    en: 'Bridging Digital Divide with Adaptive AI & Multilingual Voice',
+    kn: 'ಅಡಾಪ್ಟಿವ್ AI ಮತ್ತು ಬಹುಭಾಷಾ ಧ್ವನಿಯೊಂದಿಗೆ ಡಿಜಿಟಲ್ ಕಂದಕವನ್ನು ನಿವಾರಿಸುವುದು',
+    hi: 'अनुकूली एआई और बहुभाषी आवाज के साथ डिजिटल विभाजन को दूर करना',
+  },
   btnLaunchWorkspace: { en: 'Launch AI Workspace', kn: 'AI ವರ್ಕ್‌ಸ್ಪೇಸ್ ಪ್ರಾರಂಭಿಸಿ', hi: 'एआई कार्यक्षेत्र प्रारंभ करें' },
-  btnInspectDoc: { en: 'Inspect Document', kn: 'ದಾಖಲೆ ಪರಿಶೀಲಿಸಿ', hi: 'दस्तावेज़ की जांच करें' },
+  btnInspectDoc: { en: 'Inspect Document', kn: 'ದಾಖಲೆ ಪರಿಶೀಲಿಸಿ', hi: 'ದಸ್ತಾವೇಜಿನ ಪರೀಕ್ಷೆ' },
   btnFindScholarships: { en: 'Find Scholarships', kn: 'ವಿದ್ಯಾರ್ಥಿವೇತನ ಹುಡುಕಿ', hi: 'छात्रवृत्तियां खोजें' },
 
   // Features Section
