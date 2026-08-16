@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { BackgroundStateProvider } from '@/context/BackgroundStateContext';
 import { AccessibilityProvider } from '@/context/AccessibilityContext';
 import { BackgroundSystem } from '@/components/background';
+import { CinematicIntro } from '@/components/intro/CinematicIntro';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
@@ -18,6 +19,9 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <BackgroundStateProvider>
         <AccessibilityProvider>
+          {/* Cinematic 3D Kinetic Intro Sequence */}
+          <CinematicIntro />
+
           {/* Reactive Backdrop System */}
           <BackgroundSystem />
 
