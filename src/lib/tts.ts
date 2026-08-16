@@ -1,7 +1,7 @@
 import { SupportedLanguage } from '@/types/accessai';
 
 export function isTTSSupported(): boolean {
-  return typeof window !== 'undefined' && 'speechSynthesis' in window;
+  return typeof window !== 'undefined';
 }
 
 const LANGUAGE_CODE_MAP: Record<SupportedLanguage, string> = {
@@ -10,83 +10,145 @@ const LANGUAGE_CODE_MAP: Record<SupportedLanguage, string> = {
   hi: 'hi-IN',
 };
 
+let currentAudio: HTMLAudioElement | null = null;
+
 /**
- * Finds the best matching SpeechSynthesisVoice for a given language code.
+ * Finds if the OS/Browser has a native SpeechSynthesis voice installed for Kannada or Hindi.
  */
 function findVoiceForLanguage(lang: SupportedLanguage): SpeechSynthesisVoice | null {
-  if (!isTTSSupported()) return null;
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return null;
 
-  const targetLang = LANGUAGE_CODE_MAP[lang];
   const targetPrefix = lang === 'kn' ? 'kn' : lang === 'hi' ? 'hi' : 'en';
 
-  // 1. Exact match on language code e.g. 'kn-IN' or 'hi-IN'
-  let matched = voices.find((v) => v.lang.toLowerCase() === targetLang.toLowerCase());
-  if (matched) return matched;
+  // Match voice with language prefix
+  const matched = voices.find(
+    (v) =>
+      v.lang.toLowerCase().startsWith(targetPrefix) ||
+      v.name.toLowerCase().includes(lang === 'kn' ? 'kannada' : lang === 'hi' ? 'hindi' : 'english')
+  );
 
-  // 2. Partial match on lang prefix e.g. 'kn' or 'hi'
-  matched = voices.find((v) => v.lang.toLowerCase().startsWith(targetPrefix));
-  if (matched) return matched;
-
-  // 3. Name match containing language name e.g. "Kannada" or "Hindi"
-  const langName = lang === 'kn' ? 'kannada' : lang === 'hi' ? 'hindi' : 'english';
-  matched = voices.find((v) => v.name.toLowerCase().includes(langName));
-  if (matched) return matched;
-
-  // Fallback to any voice with 'IN' for Indian regional languages
-  if (lang === 'kn' || lang === 'hi') {
-    matched = voices.find((v) => v.lang.toLowerCase().includes('in'));
-    if (matched) return matched;
-  }
-
-  return null;
+  return matched || null;
 }
 
+/**
+ * Streams audio using high-definition voice API fallback (Google Voice Pack stream)
+ * for seamless Kannada and Hindi voice playback without requiring local OS voice packs.
+ */
+function playOnlineVoiceStream(text: string, lang: SupportedLanguage, onEnd?: () => void): void {
+  stopSpeech();
+
+  // Clean text and limit chunk size for URL streaming
+  const cleanText = text.replace(/[\n\r]+/g, ' ').trim();
+  if (!cleanText) {
+    if (onEnd) onEnd();
+    return;
+  }
+
+  // Slice into 180 character chunks for smooth audio buffering
+  const chunks = cleanText.match(/.{1,180}(?:\s+|$)/g) || [cleanText];
+  let currentChunkIndex = 0;
+
+  const playChunk = (index: number) => {
+    if (index >= chunks.length) {
+      currentAudio = null;
+      if (onEnd) onEnd();
+      return;
+    }
+
+    const chunkText = chunks[index].trim();
+    if (!chunkText) {
+      playChunk(index + 1);
+      return;
+    }
+
+    const ttsLang = lang === 'kn' ? 'kn' : lang === 'hi' ? 'hi' : 'en';
+    const streamUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(
+      chunkText
+    )}&tl=${ttsLang}&client=tw-ob`;
+
+    const audio = new Audio(streamUrl);
+    currentAudio = audio;
+
+    audio.onended = () => {
+      currentChunkIndex++;
+      playChunk(currentChunkIndex);
+    };
+
+    audio.onerror = (e) => {
+      console.warn('Voice pack stream error, trying next chunk or fallback:', e);
+      currentChunkIndex++;
+      playChunk(currentChunkIndex);
+    };
+
+    audio.play().catch((err) => {
+      console.warn('Autoplay audio failed:', err);
+      if (onEnd) onEnd();
+    });
+  };
+
+  playChunk(0);
+}
+
+/**
+ * Universal Speak Function for English, Kannada, and Hindi.
+ * Prefers local Web Speech API if native voice pack is present, otherwise
+ * seamlessly streams high-definition online Kannada & Hindi voice packs!
+ */
 export function speakText(
   text: string,
   lang: SupportedLanguage = 'en',
   onEnd?: () => void
 ): void {
-  if (!isTTSSupported()) {
-    console.warn('Text-to-speech is not supported in this browser.');
-    if (onEnd) onEnd();
-    return;
-  }
-
-  // Cancel any ongoing speech
-  window.speechSynthesis.cancel();
+  stopSpeech();
 
   if (!text || text.trim() === '') {
     if (onEnd) onEnd();
     return;
   }
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = LANGUAGE_CODE_MAP[lang] || 'en-US';
-  utterance.rate = 0.92; // Clear rate for accessibility
-  utterance.pitch = 1.0;
+  // Check if browser has local SpeechSynthesis with native voice for Kannada/Hindi
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    const nativeVoice = findVoiceForLanguage(lang);
 
-  // Attempt to select specific voice if loaded
-  const voice = findVoiceForLanguage(lang);
-  if (voice) {
-    utterance.voice = voice;
+    // If English or native voice is installed locally, use WebSpeechUtterance
+    if (lang === 'en' || nativeVoice) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = LANGUAGE_CODE_MAP[lang] || 'en-US';
+      utterance.rate = 0.92;
+      utterance.pitch = 1.0;
+
+      if (nativeVoice) {
+        utterance.voice = nativeVoice;
+      }
+
+      utterance.onend = () => {
+        if (onEnd) onEnd();
+      };
+
+      utterance.onerror = () => {
+        // Fallback to online voice pack stream if WebSpeech fails
+        playOnlineVoiceStream(text, lang, onEnd);
+      };
+
+      window.speechSynthesis.speak(utterance);
+      return;
+    }
   }
 
-  utterance.onend = () => {
-    if (onEnd) onEnd();
-  };
-
-  utterance.onerror = (err) => {
-    console.warn('TTS utterance event:', err);
-    if (onEnd) onEnd();
-  };
-
-  window.speechSynthesis.speak(utterance);
+  // Fallback to high-quality streaming voice pack for Kannada & Hindi
+  playOnlineVoiceStream(text, lang, onEnd);
 }
 
 export function stopSpeech(): void {
-  if (isTTSSupported()) {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
 }
