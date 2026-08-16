@@ -11,7 +11,7 @@ export interface Translations {
 export const translations: Translations = {
   // Brand & Navbar
   brandName: { en: 'ACCESS', kn: 'ACCESS', hi: 'ACCESS' },
-  brandSub: { en: 'Adaptive Accessibility Layer', kn: 'ಅಡಾಪ್ಟಿವ್ ಪ್ರವೇಶಸಾಧ್ಯತೆ ಲೇಯರ್', hi: 'अनुकूली पहुंच क्षमता स्तर' },
+  brandSub: { en: 'Adaptive Accessibility Layer', kn: 'ಹೊಂದಿಕೊಳ್ಳುವ ಪ್ರವೇಶಸಾಧ್ಯತೆಯ ಪದರ', hi: 'अनुकूली पहुंच क्षमता स्तर' },
   aiReady: { en: 'AI Ready', kn: 'AI ಸಿದ್ಧವಾಗಿದೆ', hi: 'एआई तैयार है' },
   aiListening: { en: 'AI Listening…', kn: 'AI ಆಲಿಸುತ್ತಿದೆ…', hi: 'एआई सुन रहा है…' },
   aiProcessing: { en: 'AI Processing…', kn: 'AI ಪ್ರಕ್ರಿಯೆಗೊಳಿಸುತ್ತಿದೆ…', hi: 'एआई प्रसंस्करण जारी है…' },
@@ -30,8 +30,8 @@ export const translations: Translations = {
   btnStopVoice: { en: 'Stop Voice', kn: 'ಧ್ವನಿ ನಿಲ್ಲಿಸಿ', hi: 'आवाज रोकें' },
   readPageIntro: {
     en: 'Welcome to ACCESS AI. An adaptive accessibility layer for digital services.',
-    kn: 'ಆಕ್ಸೆಸ್ AI ಗೆ ಸುಸ್ವಾಗತ. ಡಿಜಿಟಲ್ ಸೇವೆಗಳಿಗಾಗಿ ಅನುಕೂಲಕರ ಪ್ರವೇಶಸಾಧ್ಯತಾ ವ್ಯವಸ್ಥೆ.',
-    hi: 'एक्सेस AI में आपका स्वागत है। डिजिटल सेवाओं के लिए अनुकूलन योग्य पहुंच क्षमता स्तर।',
+    kn: 'ಆಕ್ಸೆಸ್ಎಐಗೆ ಸ್ವಾಗತ, ಇದು ಒಂದು ಹೊಂದಿಕೊಳ್ಳುವ ಪ್ರವೇಶಸಾಧ್ಯತೆಯ ಪದರ.',
+    hi: 'एक्सेस AI में आपका स्वागत है, यह एक अनुकूलन योग्य पहुंच क्षमता स्तर है।',
   },
 
   // Hero Section
@@ -128,7 +128,7 @@ export const translations: Translations = {
   },
 
   // Footer
-  footerTitle: { en: 'ACCESS AI - Universal Accessibility Layer', kn: 'ACCESS AI - ಸಾರ್ವತ್ರಿಕ ಪ್ರವೇಶಸಾಧ್ಯತೆ ಲೇಯರ್', hi: 'ACCESS AI - सार्वभौमिक पहुंच क्षमता स्तर' },
+  footerTitle: { en: 'ACCESS AI - Universal Accessibility Layer', kn: 'ACCESS AI - ಹೊಂದಿಕೊಳ್ಳುವ ಪ್ರವೇಶಸಾಧ್ಯತೆಯ ಪದರ', hi: 'ACCESS AI - सार्वभौमिक पहुंच क्षमता स्तर' },
   footerTagline: { en: 'Empowering every citizen with voice, simplified language, and adaptive digital governance.', kn: 'ಧ್ವನಿ, ಸರಳ ಭಾಷೆ ಮತ್ತು ಅಡಾಪ್ಟಿವ್ ಡಿಜಿಟಲ್ ಆಡಳಿತದೊಂದಿಗೆ ಪ್ರತಿಯೊಬ್ಬ ನಾಗರಿಕನನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು.', hi: 'आवाज, सरल भाषा और अनुकूली डिजिटल शासन के साथ प्रत्येक नागरिक को सशक्त बनाना।' },
   copyrightNotice: { en: '© 2026 ACCESS AI. All rights reserved.', kn: '© 2026 ACCESS AI. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.', hi: '© 2026 ACCESS AI. सर्वाधिकार सुरक्षित।' }
 };

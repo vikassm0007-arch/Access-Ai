@@ -27,9 +27,9 @@ export const AccessibilityPage: React.FC = () => {
     } else {
       const sampleText =
         language === 'kn'
-          ? 'ಆಕ್ಸೆಸ್ ಎಐ ಗೆ ಸುಸ್ವಾಗತ. ಇದು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಎಐ ಸಹಾಯಕ. ಡಿಜಿಟಲ್ ಸೇವೆಗಳನ್ನು ಎಲ್ಲರಿಗೂ ಸುಲಭಗೊಳಿಸಲಾಗುತ್ತದೆ.'
+          ? 'ಆಕ್ಸೆಸ್ಎಐಗೆ ಸ್ವಾಗತ, ಇದು ಒಂದು ಹೊಂದಿಕೊಳ್ಳುವ ಪ್ರವೇಶಸಾಧ್ಯತೆಯ ಪದರ.'
           : language === 'hi'
-          ? 'एक्सेस एआई में आपका स्वागत है। यह आपका व्यक्तिगत एआई सहायक है। सभी डिजिटल सेवाओं को सरल बनाया जा रहा है।'
+          ? 'एक्सेस AI में आपका स्वागत है, यह एक अनुकूलन योग्य पहुंच क्षमता स्तर है।'
           : 'Welcome to ACCESS AI. Your adaptive accessibility layer for digital services.';
       speak(sampleText, language);
     }
