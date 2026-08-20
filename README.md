@@ -1,4 +1,4 @@
-# ♿ ACCESSAI — Adaptive AI Accessibility Interface
+#  ACCESSAI — Adaptive AI Accessibility Interface
 
 <p align="center">
   <img src="https://img.shields.io/badge/AI-Powered-8A2BE2?style=for-the-badge&logo=google-gemini&logoColor=white" />
